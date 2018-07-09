@@ -1,0 +1,113 @@
+#:kivy 1.9.0
+#:import np numpy
+#:import Factory kivy.factory.Factory
+#:import Window kivy.core.window.Window
+
+
+# COLOR PALETTE
+#:set color_black (0, 0, 0, 1)
+#:set color_white (1, 1, 1, 1)
+#:set color_white_translucent (1, 1, 1, .5)
+#:set color_black_translucent (1, 1, 1, .5)
+#:set color_gray (.6, .6, .6, 1)
+#:set color_brown (71/255, 47/255, 34/255, 1)
+#:set color_brown_pale (145/255, 122/255, 107/255, 1)
+#:set color_cyan_bright (40/255, 148/255, 147/255, 1)
+#:set color_cyan_dark (34/255, 71/255, 71/255, 1)
+#:set color_orange_dark (148/255, 89/255, 55/255, 1)
+#:set color_red (165/255, 48/255, 48/255, 1)
+
+
+#:set font 'Candara'
+#:set img_logo 'home/logo.png'
+
+#STYLE
+<Label>:
+    font_name: font
+
+<ScrollView>:
+    canvas.before:
+        Color:
+            rgba: color_white_translucent
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+#CUSTOM WIDGETS
+<LoadScreen>:
+    canvas:
+        Color:
+            rgba: color_black
+        Rectangle:
+            size: self.size
+            pos: (0,0)
+    Label:
+        text: 'LOADING...'
+
+
+<DefaultLayout@BoxLayout>:
+    orientation: 'vertical'
+    title: 'title'
+    Label:
+        text: self.parent.title
+        size_hint_y: .5
+        markup: True
+        font_size: '65sp'
+
+        canvas.before:
+            Color:
+                rgba: color_brown
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<LeftButton@ButtonPlus>:
+    size_hint_x: .6
+    pos_hint: {'x':0}
+    background: 'atlas://left_button/normal'
+    background_down: 'atlas://left_button/down'
+
+
+<RightButton@ButtonPlus>:
+    background: 'atlas://right_button/normal'
+    background_down: 'atlas://right_button/down'
+    font_size: '50sp'
+
+#SCREEN MANAGER
+<ScreenManager>:
+    id: 'screen_manager'
+    home: home
+    game_config: game_config
+    game: game
+    training_config: training_config
+    training: training
+    load_screen: Factory.LoadScreen()
+
+    canvas:
+        Color: 
+            rgba: color_brown_pale
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    HomeScreen:
+        id: home
+        name: 'home'
+
+    GameConfigScreen:
+        id: game_config
+        name: 'game_config'
+
+    GameScreen:
+        id: game
+        name: 'game'
+
+    TrainingConfigScreen:
+        id: training_config
+        name: 'training_config'
+
+    TrainingScreen:
+        id: training
+        name: 'training'

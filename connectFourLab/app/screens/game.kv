@@ -1,0 +1,230 @@
+#:kivy 1.9.0
+
+
+<LinkButton@ButtonBehavior+Label>:
+    pressing: False
+    color: color_gray if self.disabled else color_white if not self.state=='down' else color_orange_dark
+    font_size: sp(20)
+
+<NavegationButton@PolymorphicButton>:
+    size_hint_y: None
+    height: self.width
+    pos_hint: {'center_y': .5}
+    on_release: self.parent.parent.on_release(self)
+    
+    atlas: 'atlas://game/navegation_button'
+    forms: {'name': 'pause', 'down': True, 'disabled_normal': 'pause_disabled'},{'name': 'play', 'down': True, 'disabled_normal': 'play_disabled'},{'name': 'backward', 'down': True, 'disabled_normal': 'backward_disabled'},{'name': 'forward', 'down': True, 'disabled_normal': 'forward_disabled'},{'name': 'begin', 'down': True, 'disabled_normal': 'begin_disabled'},{'name': 'end', 'down': True, 'disabled_normal': 'end_disabled'}
+
+<Position>:
+    img_blank_space: 'atlas://game/position/blank'
+    img_piece_white: 'atlas://game/position/white'
+    img_piece_white_hl: 'atlas://game/position/white_hl'
+    img_piece_red: 'atlas://game/position/black'
+    img_piece_red_hl: 'atlas://game/position/black_hl'
+
+<RematchPopup>:
+    description: 'Do you want to stop the current game and start a new one?'
+    button_continue_text: 'Yes'
+    button_cancel_text: 'No'
+    size_hint: (.5,.5)
+
+
+<ConfigurationPopup>:
+    description: 'Do you want to configure a new one?'
+    button_continue_text: 'Yes'
+    button_cancel_text: 'No'
+    size_hint: (.5,.5)
+
+<GameScreen>:
+    # entity ids:
+    # board, navegation_bar, menu, message_box
+    board: board
+    texture: None
+    texture_source: 'noise_texture.png'
+
+    on_pre_enter: self.manager.load_screen.open()
+    on_enter: self.manager.load_screen.dismiss()
+    on_pre_leave: self.manager.load_screen.open()
+    on_leave: self.manager.load_screen.dismiss()
+
+    canvas:
+        Color:
+            rgba: color_white
+        Rectangle:
+            pos: (0,0)
+            size: self.size
+            texture: root.texture
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: (sp(5), sp(15), sp(15), sp(5))
+
+        Menu:
+            id: menu
+            root: root
+            board: board
+            btn_rematch: btn_rematch
+            orientation: 'horizontal'
+            size_hint_y: .1
+
+            canvas.before:
+                Color:
+                    rgba: color_cyan_dark
+                Rectangle:
+                    size: (Window.size[0], self.height*2)
+                    pos: (0, self.y)
+
+            GameClock:
+                id: game_clock
+                value: self.value
+                orientation: 'horizontal'
+                Label:
+                    text: 'Time:'
+                    font_size: sp(25)
+                Label:
+                    text: self.parent.value
+                    color: color_red if game_clock.timeout else color_orange_dark if game_clock.running else color_white
+                    font_size: sp(20)
+            LinkButton:
+                text: 'Configuration'
+                on_release: menu.on_btn_config_release()
+            LinkButton:
+                id: btn_rematch
+                text: 'Rematch'
+                on_release: menu.on_press_rematch(self)
+            LinkButton:
+                text: 'Quit'
+                on_release: 
+                    root.manager.transition.direction = 'down'
+                    root.manager.current = root.manager.home.name
+
+        Board:
+            id: board
+            navegation_bar: navegation_bar
+            message_box: message_box
+            clock: game_clock
+            texture: 'game/wood_board.png'
+            size_hint_x: None
+            width: self.height/.85
+            pos_hint: {'center_x': .5}
+
+            columns: bl_column_buttons
+            positions: bl_positions
+            BoxLayout:
+                id: bl_column_buttons
+                orientation:'horizontal'
+
+            BoxLayout:
+                id: bl_positions
+                orientation:'horizontal'
+                padding: (self.parent.height/20, self.parent.height/10)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .2
+            spacing: sp(5)
+
+            canvas.before:
+                Color:
+                    rgba: color_white_translucent
+                Rectangle:
+                    size: (Window.size[0],self.height*2)
+                    pos: (0, self.top - self.height*2 - 3)
+                    
+            BoardNavegation:
+                id: navegation_bar
+                board: board
+                orientation:'horizontal'
+                spacing: sp(5)
+                size_hint_y: None
+                height: self.minimum_height
+                pos_hint: {'center_y': .5}
+
+                begin: btnBegin
+                backward: btnBackward
+                pause_play: btnPausePlay                
+                forward: btnForward
+                end: btnEnd
+                slider: nav_slider
+                slider_bubble: slider_bubble
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: sp(5)
+                    padding: (sp(10), 0)
+
+                    NavegationButton:
+                        id: btnBegin
+                        current: 'begin'
+                    NavegationButton:
+                        id: btnBackward
+                        current: 'backward'
+                    NavegationButton:
+                        id: btnPausePlay
+                        current: 'play'
+                    NavegationButton:
+                        id: btnForward
+                        current: 'forward'
+                    NavegationButton:
+                        id: btnEnd
+                        current: 'end'
+
+                BoxLayout:
+                    size_hint_y: .7
+                    size_hint_y: None
+                    height: self.width/6
+                    pos_hint: {'center_y': .5}
+
+                    RelativeLayout:
+                        ImagePlus:
+                            id: slider_bg
+                            source_: 'atlas://game/navegation_slider/background'
+
+                        Bubble:
+                            id: slider_bubble
+                            orientation: 'horizontal'
+                            opacity:0
+                            size_hint: None,None
+                            width: sp(60)
+                            height: self.width*.75
+                            text: '0/0*'
+
+                            Label:
+                                canvas.before:
+                                    Rectangle:
+                                        size:0,0
+                                text: slider_bubble.text
+
+                        SliderPlus:
+                            id: nav_slider
+                            cursor_image_: 'atlas://game/navegation_slider/cursor_normal'
+                            cursor_disabled_image_: 'atlas://game/navegation_slider/cursor_disabled'
+                            background_width: 0
+                            cursor_height: slider_bg.height/2.45
+                            cursor_width: self.cursor_height*1.55
+                            padding: self.cursor_width
+                            value_normalized: 1
+                            step: 1
+                            on_slide: navegation_bar.on_slider_move(self)
+                            on_release: navegation_bar.on_navegation_slide(self)
+                            # on_press: navegation_bar.on_navegation_slide(self)
+
+            MessageBox:
+                id: message_box
+                size_hint_x: .35
+                background: msg_box_background
+                label: msg_box_label
+
+                ImagePlus:
+                    id: msg_box_background
+                    source_: 'game/message_box.png'
+
+                Label:
+                    id: msg_box_label
+                    font_size: sp(12)
+                    text_size: self.size
+                    padding: (sp(5),sp(5))
+                    halign: 'center'
+                    valign: 'middle'
+
+

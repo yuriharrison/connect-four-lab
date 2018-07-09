@@ -1,0 +1,43 @@
+#:kivy 1.9.0
+
+
+<HomeScreen>:
+    canvas:
+        Color:
+            rgba: color_brown_pale
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_enter:
+        self.manager.transition.direction = 'left'
+
+    DefaultLayout:
+        title: '[b]CONNECT FOUR LAB[/b]'
+        
+        BoxLayout:
+            orientation: 'horizontal'
+
+            BoxLayout:
+                padding:(self.parent.width/25, self.parent.height/25)
+
+                ButtonPlus:
+                    background: img_logo
+
+            BoxLayout:
+                orientation: 'vertical'
+                padding:(0, self.parent.height/10)
+
+                orientation: 'vertical'
+
+                RightButton:
+                    label_text: 'Play'
+                    on_release: 
+                        root.manager.current = root.manager.game_config.name
+                RightButton:
+                    label_text: 'Training'
+                    on_release: 
+                        root.manager.current = root.manager.training_config.name
+                RightButton:
+                    label_text: 'Exit'
+                    on_release: app.stop()

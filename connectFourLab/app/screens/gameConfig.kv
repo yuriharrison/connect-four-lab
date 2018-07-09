@@ -1,0 +1,235 @@
+#:kivy 1.9.0
+
+
+<ModelItem>:
+    size_hint_y: None
+    height: sp(40)
+
+    canvas:
+        Color:
+            rgba: color_orange_dark if self.state == 'down' else color_cyan_dark
+        Rectangle:
+            size: self.size
+            pos: (0,0)
+
+    Label:
+        text: self.parent.model_name
+        font_size: '17sp'
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+<ModelSelection>:
+    size_hint: (.5,.5)
+    sb_model: sb_model
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: sp(10)
+
+        RelativeLayout:
+            size_hint_y: .1
+
+            Label:
+                text: 'Select a trained model'
+                font_size: '25sp'
+
+        ScrollView:
+            SelectionBox:
+                id: sb_model
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: sp(5)
+                model: 'ModelItem'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (.5,.2)
+            pos_hint: {'x': .5}
+            padding: sp(10)
+
+            Button:
+                text: 'Cancel'
+                color: color_white
+                background_color: color_orange_dark if self.state == 'down' else color_cyan_dark
+                on_press: root.dismiss()
+
+
+<AgentItem@SelectionBoxItem>:
+    id: agentItem
+    size_hint: (1, None)
+    height: sp(80)
+
+    canvas:
+        Color:
+            rgba: color_cyan_dark if not self.selected else color_orange_dark
+        Rectangle:
+            pos: (0,0)
+            size: self.size
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: (self.parent.width/15, 0)
+
+            Label:
+                text: agentItem.data.name
+                font_size: '25sp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'bottom'
+            Label:
+                text: agentItem.data.description
+                font_size: '15sp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                color: color_white_translucent
+        
+        RelativeLayout:
+            size_hint_x: .2 if agentItem.data.clock_management else 0
+
+            Label:
+                text: 'C'
+
+
+<TimeLimitItem@SelectionBoxItem>:
+    text: self.text
+    size_hint: (None, 1)
+    width: sp(60)
+    
+    canvas.before:
+        Color:
+            rgba: color_cyan_dark if not self.selected else color_orange_dark
+        Rectangle:
+            pos: (0,0)
+            size: self.size
+
+    Label:
+        text: self.parent.text
+
+
+<SelectedAgentDisplay@ButtonBehavior+RelativeLayout>:
+    selected: False
+    text: self.text if self.text else 'Name'
+    kind: self.kind if self.kind else 'Kind'
+
+    canvas:
+        Color:
+            rgba: color_orange_dark if self.selected else color_cyan_dark
+        Rectangle:
+            size: self.size
+            pos:(0,0)
+
+    BoxLayout:
+        orientation:'horizontal'
+        Label:
+            text: self.parent.parent.text
+            font_size: '18sp'
+        Label:
+            text: self.parent.parent.kind
+            font_size: '15sp'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+    
+
+<GameConfigScreen>:
+    canvas:
+        Color:
+            rgba: color_brown_pale
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    DefaultLayout:
+        title: 'Configuration'
+        
+        BoxLayout:
+            orientation: 'vertical'
+
+            # CONTENT
+            BoxLayout:
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint: (.8,1)
+                        pos_hint: {'center_x': .5}
+
+                        Label:
+                            text: 'Player One'
+                            font_size: '30sp'
+
+                        SelectedAgentDisplay:
+                            id: display_one
+                            on_release: 
+                                root.switch_selection()
+
+                        Label:
+                            text: 'Player Two'
+                            font_size: '30sp'
+
+                        SelectedAgentDisplay:
+                            id: display_two
+                            on_release: 
+                                root.switch_selection()
+
+                    BoxLayout:
+                        orientation:'vertical'
+                        size_hint: (.8,.8)
+                        pos_hint: {'center_x': .5}
+
+                        Label:
+                            text: 'Time Limit'
+                            font_size: '30sp'
+                            text_size: self.size
+                            halign: 'center'
+                            valign: 'bottom'
+                            padding_y: dp(15)
+
+                        ScrollView:
+                            size_hint_y: .4
+
+                            SelectionBox:
+                                id: sb_time_limit
+                                orientation: 'horizontal'
+                                size_hint_x: None
+                                width: self.minimum_width
+                                spacing: sp(15)
+                                model: 'TimeLimitItem'
+
+                ScrollView:
+                    SelectionBox:
+                        id: sb_agents
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: self.parent.height/20
+                        model: 'AgentItem'
+                                    
+            # foot
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.2
+                # spacing: sp(120)
+                
+                AnchorLayout:
+                    anchor_x: 'left'
+                    LeftButton:
+                        label_text: 'Back'
+                        font_size: '30sp'
+                        on_release: root.on_btn_back_press(self)
+
+                AnchorLayout:
+                    anchor_x: 'right'
+                    RightButton:
+                        label_text: 'START GAME'
+                        font_size: '30sp'
+                        on_release: root.on_btn_start_game_press(self)

@@ -1,0 +1,130 @@
+#:kivy 1.9.0
+
+
+<TrainerItem>:
+    size_hint: (1, None)
+    height: sp(80)
+
+    canvas:
+        Color:
+            rgba: color_cyan_dark if not self.selected else color_orange_dark
+        Rectangle:
+            pos: (0,0)
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: (self.parent.width/15, 0)
+
+        Label:
+            text: root.data.name
+            font_size: '25sp'
+            text_size: self.size
+            halign: 'left'
+            valign: 'bottom'
+        Label:
+            text: root.data.short_description
+            font_size: '15sp'
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            color: color_white_translucent
+
+
+<TrainingConfigScreen>:
+    canvas:
+        Color:
+            rgba: color_brown_pale
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    DefaultLayout:
+        title: 'Training Config'
+        
+        BoxLayout:
+            orientation: 'vertical'
+
+            # CONTENT
+            BoxLayout:
+                orientation: 'horizontal'
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: sp(15)
+                    spacing: sp(15)
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: sp(15)
+
+                        RelativeLayout:
+                            size_hint_y: .1
+                            Label:
+                                text: 'Description'
+                                font_size: '25sp'
+
+                        Label:
+                            canvas.before:
+                                Color:
+                                    rgba: color_white_translucent
+                                Rectangle:
+                                    size: self.size
+                                    pos: self.pos
+
+                            id: lbl_description
+                            font_size: '18sp'
+                            text_size: self.size
+                            color: color_cyan_dark
+                            halign: 'left'
+                            valign: 'top'
+                            padding: ('5sp','5sp')
+                    
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: .15
+                        spacing: sp(15)
+
+                        RelativeLayout:
+                            size_hint_y: .3
+                            Label:
+                                text: 'Variables (optional)'
+                                font_name: 'Arial'
+                                font_size: '15sp'
+                        
+                        RelativeLayout:
+                            TextInput:
+                                id: ti_variables
+                                multiline: False
+                                height: self.minimum_height
+
+                ScrollView:
+                    SelectionBox:
+                        id: sb_trainers
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: self.parent.height/20
+                        model: 'TrainerItem'
+                                    
+            # foot
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.2
+                # spacing: sp(120)
+                
+                AnchorLayout:
+                    anchor_x: 'left'
+                    LeftButton:
+                        label_text: 'Back'
+                        font_size: '30sp'
+                        on_release: root.on_btn_back_press(self)
+
+                AnchorLayout:
+                    anchor_x: 'right'
+                    RightButton:
+                        opacity: 1 if root.selected_trainer else 0
+                        disabled: not root.selected_trainer
+                        label_text: 'Start Training'
+                        font_size: '30sp'
+                        on_release: root.on_btn_start_training_press(self)

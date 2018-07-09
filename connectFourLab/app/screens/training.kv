@@ -1,0 +1,62 @@
+#:kivy 1.9.0
+
+
+<TrainingScreen>:
+    on_pre_enter: self.manager.load_screen.open()
+    on_enter: self.manager.load_screen.dismiss()
+
+    canvas:
+        Color:
+            rgba: color_brown_pale
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    DefaultLayout:
+        title: 'Training'
+        
+        BoxLayout:
+            orientation: 'vertical'
+
+            RelativeLayout:
+                size_hint_y: .1
+
+                Label:
+                    text: 'Running ' + root.trainer.name if root.trainer else ''
+                    font_size: '25sp'
+            
+            ScrollView:
+                canvas.before:
+                    Color:
+                        rgba: color_gray
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Label:
+                    id: log_console
+                    font_size: '16sp'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'top'
+                    padding: ('10sp','10sp')
+                                    
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.2
+                # spacing: sp(120)
+                
+                AnchorLayout:
+                    anchor_x: 'left'
+                    LeftButton:
+                        label_text: 'Cancel' if root.running else 'Back'
+                        font_size: '30sp'
+                        on_release: root.on_btn_back_press(self)
+
+                AnchorLayout:
+                    anchor_x: 'right'
+                    RightButton:
+                        opacity: 0 if root.running else 1
+                        disabled: root.running
+                        label_text: 'Play'
+                        font_size: '30sp'
+                        on_release: root.on_btn_start_game_press(self)

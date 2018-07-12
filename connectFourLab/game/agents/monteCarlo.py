@@ -124,7 +124,7 @@ class AgentMonteCarlo(AgentBase, TimerStrategy):
         self.best_position = best_node.position
 
     def create_root_node(self, board):
-        return Node(board, self._memory)
+        return Node(board, self.memory)
 
     def _explore(self, node):
         if not node.rollout():

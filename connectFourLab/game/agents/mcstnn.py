@@ -38,7 +38,7 @@ class AgentMCSTNN(AgentMonteCarlo):
         
 
     def create_root_node(self, board):
-        return NodeMCSTNN(self.model, board, self._memory)
+        return NodeMCSTNN(self.model, board, self.memory)
 
     def start_timer(self, rule, max):
         super().start_timer(rule, 20)

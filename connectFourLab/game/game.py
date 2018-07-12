@@ -1,3 +1,4 @@
+"""Connect Four game logic"""
 import os, sys
 import random
 import numpy as np
@@ -7,32 +8,141 @@ from enum import Enum
 from copy import copy, deepcopy
 from threading import Thread
 from enum import Enum, auto
-from .helpers import next_position, check_winner
+from . import helpers
 from .timer import Chronometer, Timer
 from .agents import AgentRandom, AgentHuman
 
 
+class InvalidColumn(Exception):
+
+    def __init__(self, player_name, value, message):
+        full_msg = '{} chose an invalid column. Column: {}'.format(player_name, value)
+
+        if message:
+            full_msg = '{} - {}'.format(full_msg, message)
+
+        super().__init__(full_msg)
+
 class RunGame:
+    """Run matches of Connect Four (7x7)
+
+    This class uses [Agents](../agents) to take actions
+    each turn and [Timer](../timer) to control the `time_limit`.
+
+    # Arguments
+        player_one: type or instance, optional, default `None`
+            - Type or instance of any class which inherit from `AgentBase`
+            - If `None` the AgentRandom will be assigned 
+        player_two: same as `player_one`
+        first_player_randomized: bool, optional, default False
+            - Defines if the first turn will be randomized or the player one
+                will start the game
+        time_limit: int, optional, default None
+            - Defines the limit of time each player have to play the match
+            - `None` - Unlimited time
+        print_result_on_console: bool, optional, default False
+            - Defines if in the end of the match the result will be printed
+                on the console. Good for debug.
+        start: bool, optional, default True
+            - If `True` the game will be started in the init or 
+                else you have to call `start`
+        async: bool, optional, default False
+            - If `True` the game will be run asynchronously
+
+    # Attributes
+        GameStatus: Enum -> (running, winner, tie, timeout, killed, exception)
+            - Example: RunGame.GameStatus.winner
+        BOARD_FORMAT: tuple, constant, value (7,7), define the board dimensions
+        MAX_TURNS_POSSIBLE: int, the maximum number of turns in a match
+        winner: `AgentBase`
+            - The Agent winner of the last match, if the is one.
+        status: GameStatus, check the example(2) bellow
+            - `None` - New instance, not started yet 
+            - `running` - Game is running
+            - `winner` - Last game ended with a winner
+            - `tie` - Last game ended in a tie
+            - `timeout` - In the last game one of the players
+                left the time run out
+            - `killed` - The game was stoped with the `kill` method
+            - `exception` - Exception during the game execution
+
+    # Properties
+        is_running: Return `True` if the game is currently running
+
+    # Exeptions
+        InvalidColumn: raised when the agent return a column out of range
+            or a column already fulfilled
+
+    # Example 1
+    
+    ```python
+    from connectFourLab.game import RunGame
+    RunGame(print_result_on_console=True)
+    ```
+
+    # Example 2
+
+    ```python
+    import time
+    from connectFourLab.game import RunGame
+    from connectFourLab.game.agents.monteCarlo import AgentSimulation
+
+    game = RunGame(player_one=AgentSimulation, async=True)
+    while game.is_running:
+        time.sleep(1)
+    
+    if game.status == game.GameStatus.tie:
+        print('The game ended in a tie.')
+    elif game.status == game.GameStatus.winner:
+        print('Winner:', game.winner.name)
+    elif etc...
+    ```
+
+    ### UI implementation
+
+    To implement an User Interface you can override the events and
+    implement the `get_human_input`
+
+    # Events
+        on_game_start: Triggered when the game starts
+        on_new_turn: Triggered when a new turn starts
+        on_end_turn: Triggered when the turn ends
+        on_game_end: Triggered when the game ends
+
+    # User input
+        get_human_input: It's called by any AgentHuman in the match
+
+    # UI Attributes
+        memory: list, register all turns data
+            - Item: (player_id, current_board, column_choosed)
+        players: dict, two Agents one for each player
+            - player one: id `1` - two: id `-1`
+        clock: dict, two clocks (`Chronometer` or `Timer`) one for each player
+            - player one: id `1` - two: id `-1`
+
+    # UI Example
+        See [Game Screen - Board class](../../app/screens/game#board-class)
+    """
     GameStatus = Enum('GameStatus', 'running winner tie timeout killed exception')
     BOARD_FORMAT = (7,7)
     MAX_TURNS_POSSIBLE = BOARD_FORMAT[0]*BOARD_FORMAT[1]
-    _INVALID_POSITION_MSG = '{} chose an invalid column. Position: {}'
+    
 
-    def __init__(self, 
+    def __init__(self,
                  player_one=None, 
                  player_two=None,
                  first_player_randomized=True,
                  time_limit=None,
                  print_result_on_console=False,
                  start=True,
-                 ascync=False
+                 async=False
                 ):
         self.first_player_randomized = first_player_randomized
         self._time_limit = time_limit
         self._print_console = print_result_on_console
         self.status = None
         self.game_thread = None
-        self.ascync=ascync
+        self.async=async
 
         if not player_one:
             player_one = AgentRandom()
@@ -41,7 +151,7 @@ class RunGame:
             
 
         if type(player_one) is AgentHuman:
-            player_one.get_input = self._get_human_input
+            player_one.get_input = self.get_human_input
 
         if not player_two:
             player_two = AgentRandom()
@@ -49,11 +159,11 @@ class RunGame:
             player_two = player_two()
 
         if type(player_two) is AgentHuman:
-            player_two.get_input = self._get_human_input
+            player_two.get_input = self.get_human_input
 
         if self._time_limit:
             self.clocks = {1:Timer(self._time_limit, self._time_out), 
-                                 -1:Timer(self._time_limit, self._time_out)}
+                          -1:Timer(self._time_limit, self._time_out)}
         else:
             self.clocks = {1:Chronometer(), -1:Chronometer()}
 
@@ -65,25 +175,33 @@ class RunGame:
             self.start()
 
     def start(self):
-        self.reset()
+        """Starts a new match"""
+        self._reset()
         self.kill_match = False
         self.status = self.GameStatus.running
 
-        if self.ascync:
+        if self.async:
             self.game_thread = Thread(target=self._run_game)
             self.game_thread.start()
         else:
             self._run_game()
 
-    def reset(self):
+    def _reset(self):
+        """Reset the enviroment for a new game"""
+        self.kill()
         self.winner = None
         self.time_expired = False
-        self._memory = []
+        self.memory = []
         self._empty_board()
-        self.kill()
+
+        for _, clock in self.clocks.items():
+            clock.reset()
 
     def _run_game(self):
+        """Run the game (can be called asynchronously)"""
         try:
+            self.on_game_start()
+
             first_player = 1
             if self.first_player_randomized:
                 first_player = 1 if random.randint(0,1) == 0 else -1
@@ -102,9 +220,13 @@ class RunGame:
             self.exception = exc
             self.status = self.GameStatus.exception
         finally:
-            self._on_end_game()
+            self.on_game_end()
 
     def _define_char(self, first_player):
+        """Define the character to represent each player (X or O)
+        
+        Only relevant when printing the result
+        """
         if not self._print_console:
             return
 
@@ -115,20 +237,28 @@ class RunGame:
                 self.players[i].char = 'O'
 
     def _turns_loop(self, fisrt_player):
+        """Run all tuns necessary
+        
+        Each turn get an action, verify if the action is valid,
+        modify board check if the is a winner, if not go to the next turn.
+
+        If the `time_limit` is not None, it will use a [Timer](timer)
+        for each player. If the time runs out the player loses.
+        """
         next_to_play = fisrt_player
 
         for i in range(self.MAX_TURNS_POSSIBLE):
             turn = i + 1
-            self._on_new_turn(self.players[next_to_play], 
+            self.on_new_turn(self.players[next_to_play], 
                               self.clocks[next_to_play])
 
             playing = next_to_play
             next_to_play = 1 if next_to_play == -1 else -1
 
-            with self.clocks[playing]:
+            with self.clocks[playing] as clock:
                 if self._time_limit:
-                    clock_copy = copy(self.clocks[playing])
-                    self.players[playing].update_clock(turn, clock_copy)
+                    c_clock = copy(clock)
+                    self.players[playing].update_clock(turn, c_clock)
 
                 column = self.players[playing].action(deepcopy(self.board))
                 # Thread(target=self.get_player_choice, args=(playing,)).start()
@@ -142,18 +272,18 @@ class RunGame:
                 return
 
             if column > 6 or column < 0:
-                raise Exception(self._INVALID_POSITION_MSG
-                                .format(self.players[playing].name, column))
+                raise InvalidColumn(self.players[playing].name, column,
+                    'Column out of range, the range of columns is 0 to 6.')
 
-            next_pos = next_position(self.board, column)
+            next_pos = helpers.next_position(self.board, column)
 
             if next_pos is None:
-                raise Exception(self._INVALID_POSITION_MSG
-                                .format(self.players[playing].name, column))
+                raise InvalidColumn(self.players[playing].name, column,
+                    'The chosen column is full.')
             
-            self._memory.append([playing, deepcopy(self.board), column])
+            self.memory.append([playing, deepcopy(self.board), column])
 
-            self._on_end_turn()
+            self.on_end_turn()
 
 
             self.board[column, next_pos] = playing
@@ -165,20 +295,29 @@ class RunGame:
                 return
 
     def _check_winner(self):
-        winner = check_winner(self.board)
+        """Check if the current board has a winner, if so sets the winner"""
+        winner = helpers.check_winner(self.board)
         if winner:
             self.winner = self.players[winner]
     
     def _time_out(self):
+        """Time out callback of the `clocks`
+        triggered if one of the players run out of time."""
         self.time_expired = True
 
     def kill(self):
+        """Stop the current match.
+
+        Force the game to stop and wait for the status confirmation.
+        """
         self.kill_match = True
 
-        if self.ascync and self.game_thread:
-            for _, player in self.players.items():
-                if type(player) is AgentHuman:
-                    player.column_choosed = 0
+        for _, player in self.players.items():
+            if type(player) is AgentHuman:
+                player.column_choosed = 0
+
+        while self.is_running:
+            time.sleep(.2)
 
     def _empty_board(self):
         self.board = np.zeros(self.BOARD_FORMAT, dtype=int)
@@ -188,26 +327,78 @@ class RunGame:
         return self.status == self.GameStatus.running
 
 
-    def _get_human_input(self):
-        '''To be overridden by an UI'''
+    def get_human_input(self, player, board):
+        """Event game start
+        
+        To be overridden by an UI.
+
+        This method will be called by every `AgentHuman`
+        present in the match, if the is one.
+
+        This method should not return the players action,
+        or anything at all, the players column of choice 
+        should be set in `player.column_choosed`, 
+        the `AgentHuman` will automatically detect and
+        return the action.
+
+        If this method is not overridden the `AgentHuman`
+        won't work
+
+        # Arguments
+            player: `AgentHuman`, owner of the turn
+            board: current state of the board
+
+        # Return
+            Should always return None
+        """
         pass
 
-    def _on_new_turn(self, player, clock):
-        '''To be overridden by an UI'''
+    def on_game_start(self):
+        """Event game start
+        
+        To be overridden by an UI. 
+        Called in the beginning of a match.
+        """
         pass
 
-    def _on_end_turn(self):
-        '''To be overridden by an UI'''
+    def on_new_turn(self, player, clock):
+        """Event new turn
+        
+        To be overridden by an UI.
+        Called in the beginning of each turn.
+        
+        # Arguments
+            player: `AgentBase`, owner of the turn
+            clock: `Chronometer` or `Timer`,
+                clock of the owner of the turn
+        """
         pass
 
-    def _on_end_game(self):
-        '''To be overridden by an UI'''
+    def on_end_turn(self):
+        """Event end turn
+        
+        To be overridden by an UI. 
+        Called in the end of a turn."""
         pass
+        
+    def on_game_end(self):
+        """Event game end
+        
+        To be overridden by an UI. 
+        Called in the end of a match."""
+        pass
+
 
     def _print_result_console(self):
+        """Print the end result of a match in the console
+        
+        Print the board game with characters ('X' and 'O')
+        representing the players ids 1 and -1, the number of turns
+        print the array `board` and the name of the winner.
+        """
         board = self.board
         players = self.players
-        turn = len(self._memory)
+        turn = len(self.memory)
 
         if not self._print_console:
             return

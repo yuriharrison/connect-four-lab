@@ -1,0 +1,11 @@
+site_name: Connect Four Lab Documentation
+# theme: default
+# theme_dir: theme
+docs_dir: sources
+
+pages:
+- Home: index.md
+- Game:
+  - Game: Game/game.md
+  - Timer: Game/timer.md
+  - Helpers: Game/helpers.md

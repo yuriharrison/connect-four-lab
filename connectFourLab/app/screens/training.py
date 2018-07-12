@@ -23,10 +23,10 @@ class TrainingScreen(Screen):
         self.module = module = context.load_trainer_module(self.trainer.module)
         module.kwargs = self.trainer.variables
         self.running = True
-        self.thread = Thread(target=self.ascync_start, args=(module,))
+        self.thread = Thread(target=self.async_start, args=(module,))
         self.thread.start()
 
-    def ascync_start(self, module):
+    def async_start(self, module):
         try:
             module.start(self.log)
         except:

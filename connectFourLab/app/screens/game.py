@@ -17,7 +17,6 @@ from .. import context
 from ..myWidgets import ImagePlus, PopupDecorator, ConfirmationPopup, PolymorphicButton
 from ...game import RunGame, helpers
 
-# TODO: IMPLEMENT SAVE GAME BUTTON
 
 class RematchPopup(ConfirmationPopup):
     pass
@@ -26,8 +25,9 @@ class ConfigurationPopup(ConfirmationPopup):
 class ExitPopup(ConfirmationPopup):
     pass
 
+
 class GameLogic(RunGame):
-    '''Class necessary to bypass kivy's event handler'''
+    '''Class necessary to bypass widget __init__ call'''
     def __init__(self):
         pass
 
@@ -60,26 +60,26 @@ class Board(RelativeLayout, GameLogic):
         RunGame.__init__(self, player_one, player_two, 
             time_limit=time_limit, 
             start=False, 
-            ascync=True)
+            async=True)
 
-        RunGame.start(self)
+        super().start()
     
     def rematch(self):
-        RunGame.start(self)
+        super().start()
 
-    def reset(self):
+    def _reset(self):
         self.stop_replay = True
         self.change_episode(reset=-1)
         self._initialize_board()
-        RunGame.reset(self)
+        super()._reset()
 
     def replay(self, game_memory):
-        self._memory = game_memory
+        self.memory = game_memory
         self.change_episode(reset=0)
         self._play()
 
     def save_game(self, save_name='default_name'):
-        np.save(r'saved_games/{}'.format(save_name), self._memory)
+        np.save(r'saved_games/{}'.format(save_name), self.memory)
 
     def register_end_game_event(self, event):
         self._end_game_events.append(event)
@@ -169,7 +169,7 @@ class Board(RelativeLayout, GameLogic):
         self._play_thread.start()
 
 
-    def _get_human_input(self, player, board):
+    def get_human_input(self, player, board):
         self.columns.disabled = False
 
     def _on_column_click(self, btn):
@@ -187,7 +187,7 @@ class Board(RelativeLayout, GameLogic):
             self.columns.disabled = True
 
 
-    def _on_new_turn(self, player, clock):
+    def on_new_turn(self, player, clock):
         self._player_turn = player
 
         if self._time_limit:
@@ -196,7 +196,7 @@ class Board(RelativeLayout, GameLogic):
         msg = 'Turn: {}'.format(self._player_description(player))
         self.message_box.show_message(msg)
 
-    def _on_end_turn(self):
+    def on_end_turn(self):
         self.change_episode(modifier=1)
         self.navegation_bar.set_selider_max(self._last_episode)
         self._scenario()
@@ -204,9 +204,9 @@ class Board(RelativeLayout, GameLogic):
 
     @property
     def _last_episode(self):
-        return len(self._memory) - 1
+        return len(self.memory) - 1
 
-    def _on_end_game(self):
+    def on_game_end(self):
         msg = str()
 
         if self.winner:
@@ -246,7 +246,7 @@ class Board(RelativeLayout, GameLogic):
 
     def _get_memory_navegation(self):
         try:
-            return self._memory[self.navegation_episode]
+            return self.memory[self.navegation_episode]
         except IndexError:
             print('Index error - Episode:', self.navegation_episode)
 
@@ -367,10 +367,10 @@ class MessageBox(RelativeLayout):
         if len(message) > 104:
             raise ValueError('Message is too large.')
 
-        self.thread = Thread(target=self._ascync_show_message, args=(message, time_sec, keep_old_msg))
+        self.thread = Thread(target=self._async_show_message, args=(message, time_sec, keep_old_msg))
         self.thread.start()
 
-    def _ascync_show_message(self, message, time_sec, keep_old_msg):
+    def _async_show_message(self, message, time_sec, keep_old_msg):
         self.opacity = 1
 
         self.old_text = self.label.text
@@ -427,6 +427,7 @@ class GameClock(BoxLayout):
         self.running = False
         self._current_clock = None
         self._stop_clock_tick = True
+        self.__thread_clock_tick = None
 
     def _start_clock_tick(self):
         self._stop_clock_tick = False

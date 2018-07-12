@@ -15,8 +15,8 @@ __DIR__ = os.path.dirname(__file__)
 
 _images_dir = 'images'
 _screens_dir = 'screens'
-_agents_package = 'game.agents'
-_trainer_package = 'game.trainers'
+_agents_package = 'connectFourLab.game.agents'
+_trainer_package = 'connectFourLab.game.trainers'
 _agents_dir_relative_path = '../game/agents'
 _trainers_dir_relative_path = '../game/trainers'
 _models_dir_relative_path = '../game/models'

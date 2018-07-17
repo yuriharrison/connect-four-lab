@@ -21,6 +21,20 @@ from connectFourLab.game import RunGame
 from connectFourLab.game import helpers
 from connectFourLab.game.timer import Chronometer, Timer
 
+from connectFourLab.game.agents import AgentBase, AgentHuman, AgentRandom
+from connectFourLab.game.agents.negamax import AgentNegamax
+from connectFourLab.game.agents.monteCarlo import AgentSimulation, AgentSimulationTL
+from connectFourLab.game.agents.monteCarlo import AgentMonteCarlo
+from connectFourLab.game.agents.mctsnn import AgentMCTSNN
+
+from connectFourLab.game.agents.strategies import RandomStrategy
+from connectFourLab.game.agents.strategies import TimerStrategy
+from connectFourLab.game.agents.strategies import ZobristHashingStrategy
+from connectFourLab.game.agents.strategies import TreeSearchStrategy
+from connectFourLab.game.agents.strategies import SimulationStrategy
+from connectFourLab.game.agents.strategies import Node
+from connectFourLab.game.agents.strategies import DepthMeasure
+
 
 if sys.version[0] == '2':
     reload(sys)
@@ -70,7 +84,49 @@ PAGES = [
             helpers.seconds_to_hms,
         ]
     },
+    {
+        'page': 'Agents/base.md',
+        'classes': [AgentBase,]
+    },
+    {
+        'page': 'Agents/agents.md',
+        'classes': [AgentHuman, 
+                    AgentRandom, 
+                    AgentNegamax, 
+                    AgentSimulation,
+                    AgentSimulationTL,
+                    AgentMonteCarlo,
+                    AgentMCTSNN,
+        ]
+    },
+    {
+        'page': 'Agents/strategies.md',
+        'classes': [(RandomStrategy, [RandomStrategy.random_choice,]),
+                    (TimerStrategy, [TimerStrategy.start_timer,]),
+                    (ZobristHashingStrategy, [ZobristHashingStrategy.init_zobrist,
+                                              ZobristHashingStrategy.hash, 
+                                              ZobristHashingStrategy.next_random64,
+                    ]),
+                    (TreeSearchStrategy, [TreeSearchStrategy.negamax, 
+                                          TreeSearchStrategy.childs, 
+                                          TreeSearchStrategy.save_search, 
+                                          TreeSearchStrategy.stored_value
+                    ]),
+                    (SimulationStrategy, [SimulationStrategy.simulate,]),
+                    (Node, [Node.rollout,
+                            Node.rollout_score,
+                            Node.children,
+                            Node.new_node,
+                    ]),
+                    (DepthMeasure, [DepthMeasure.start,
+                                    DepthMeasure.add,
+                                    DepthMeasure.reset,
+                                    DepthMeasure.print,
+                    ]),
+        ]
+    },
 ]
+
 
 # Root link to the documentation
 ROOT = 'http://localhost/8000'
@@ -137,7 +193,7 @@ def class_to_source_link(cls):
     path += '.py'
     line = inspect.getsourcelines(cls)[-1]
     link = (ROOT_SOURCE + path + '#L' + str(line))
-    return '[[source]](' + link + ')'
+    return '[[source code]](' + link + ')'
 
 
 def code_snippet(snippet):
@@ -353,10 +409,10 @@ if __name__ == '__main__':
             signature = get_class_signature(cls)
             subblocks.append('<span style="float:right;">' +
                              class_to_source_link(cls) + '</span>')
-            if element[1]:
-                subblocks.append('## ' + cls.__name__ + ' class\n')
-            else:
-                subblocks.append('### ' + cls.__name__ + '\n')
+            # if element[1]:
+            #     subblocks.append('## ' + cls.__name__ + ' class\n')
+            # else:
+            subblocks.append('## ' + cls.__name__ + '\n')
             subblocks.append(code_snippet(signature))
             docstring = cls.__doc__
             if docstring:

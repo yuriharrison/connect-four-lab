@@ -23,16 +23,17 @@ class InvalidColumn(Exception):
 
         super().__init__(full_msg)
 
+
 class RunGame:
     """Run matches of Connect Four (7x7)
 
-    This class uses [Agents](../agents) to take actions
-    each turn and [Timer](../timer) to control the `time_limit`.
+    This class uses [Agents](./Agents) to take actions
+    each turn and [Timer](./timer) to control the `time_limit`.
 
     # Arguments
         player_one: type or instance, optional, default `None`
-            - Type or instance of any class which inherit from `AgentBase`
-            - If `None` the AgentRandom will be assigned 
+            - Type or instance of any `AgentBase` object
+            - If `None` the `AgentRandom` object will be assigned 
         player_two: same as `player_one`
         first_player_randomized: bool, optional, default False
             - Defines if the first turn will be randomized or the player one
@@ -54,7 +55,7 @@ class RunGame:
             - Example: RunGame.GameStatus.winner
         BOARD_FORMAT: tuple, constant, value (7,7), define the board dimensions
         MAX_TURNS_POSSIBLE: int, the maximum number of turns in a match
-        winner: `AgentBase`
+        winner: `AgentBase` object
             - The Agent winner of the last match, if the is one.
         status: GameStatus, check the example(2) bellow
             - `None` - New instance, not started yet 
@@ -73,14 +74,14 @@ class RunGame:
         InvalidColumn: raised when the agent return a column out of range
             or a column already fulfilled
 
-    # Example 1
-    
+    __Example 1__
+
     ```python
     from connectFourLab.game import RunGame
     RunGame(print_result_on_console=True)
     ```
 
-    # Example 2
+    __Example 1__
 
     ```python
     import time
@@ -312,10 +313,6 @@ class RunGame:
         """
         self.kill_match = True
 
-        for _, player in self.players.items():
-            if type(player) is AgentHuman:
-                player.column_choosed = 0
-
         while self.is_running:
             time.sleep(.2)
 
@@ -333,15 +330,11 @@ class RunGame:
         To be overridden by an UI.
 
         This method will be called by every `AgentHuman`
-        present in the match, if the is one.
+        present in the match, if the is one. This method
+        should return the user input, the player
+        column of choice.
 
-        This method should not return the players action,
-        or anything at all, the players column of choice 
-        should be set in `player.column_choosed`, 
-        the `AgentHuman` will automatically detect and
-        return the action.
-
-        If this method is not overridden the `AgentHuman`
+        If this method is not overridden, the `AgentHuman`
         won't work
 
         # Arguments
@@ -349,7 +342,7 @@ class RunGame:
             board: current state of the board
 
         # Return
-            Should always return None
+            User input, column of choice, as int 0-6
         """
         pass
 
@@ -368,7 +361,7 @@ class RunGame:
         Called in the beginning of each turn.
         
         # Arguments
-            player: `AgentBase`, owner of the turn
+            player: `AgentBase` object, owner of the turn
             clock: `Chronometer` or `Timer`,
                 clock of the owner of the turn
         """

@@ -1,16 +1,33 @@
+"""MONTE CARLO TREE SEARCH WITH NERONAL NETWORK EVALUATION"""
 import numpy as np
-from .monteCarlo import AgentMonteCarlo, Node
+from .monteCarlo import AgentMonteCarlo
+from .strategies import Node
 from .. import helpers
+from ..exceptions import MissingModel
 
-'''
-    MONTE CARLO SEARCH THREE WITH NERONAL NETWORK EVALUATION
-'''
 
-class AgentMCSTNN(AgentMonteCarlo):
-    name = 'MCSTNN'
+class AgentMCTSNN(AgentMonteCarlo):
+    """Agent Monte Carlo Tree Search with Neural Network evaluation.
+    
+    This agent inherit from `AgentMonteCarlo` using the same
+    process but evaluating the rollouts by using a trained
+    neural network model.
+
+    This agent uses the Node `NodeMCTSNN` which evaluate the rollout
+    score by predicting the board state in a trained model.
+
+    # Arguments
+        model_file: str; path to the '.h5' model file;
+        model: str, loaded `keras.models.Model` object;
+
+    # Exceptions
+        MissingModel: raise when creating a new instance, if
+            both model_file and model are None.
+    """
+    name = 'MCTSNN'
     description = 'Monte Carlo strategy with evaluation based on a neural network'
     kind = 'Agent Kind'
-    model_key = 'MCSTNN'
+    model_key = 'MCTSNN'
     require_nn_model = True
 
     def __init__(self, model_file=None, model=None):
@@ -27,6 +44,8 @@ class AgentMCSTNN(AgentMonteCarlo):
             model = keras.models.load_model(model_file)
             self.model = model
             self.graph = tf.get_default_graph()
+        else:
+            raise MissingModel(AgentMCTSNN.__name__, 'Evaluation model')
         
 
     def action(self, board):
@@ -38,20 +57,20 @@ class AgentMCSTNN(AgentMonteCarlo):
         
 
     def create_root_node(self, board):
-        return NodeMCSTNN(self.model, board, self.memory)
+        return NodeMCTSNN(self.model, board, self._memory)
 
     def start_timer(self, rule, max):
         super().start_timer(rule, 20)
 
 
-class NodeMCSTNN(Node):
+class NodeMCTSNN(Node):
 
     def __init__(self, model, *a, **kw):
         super().__init__(*a, **kw)
         self.model = model
 
     def new_node(self, board, column):
-        node = NodeMCSTNN(model=self.model, 
+        node = NodeMCTSNN(model=self.model, 
                     board=board, 
                     parent=self, 
                     position=column, 

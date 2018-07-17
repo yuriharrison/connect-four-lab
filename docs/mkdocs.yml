@@ -9,3 +9,8 @@ pages:
   - Game: Game/game.md
   - Timer: Game/timer.md
   - Helpers: Game/helpers.md
+- Agents:
+  - Base class: Agents/base.md
+  - Trainers: Agents/trainers.md
+  - List of Agents: Agents/agents.md
+  - List of Strategies: Agents/strategies.md

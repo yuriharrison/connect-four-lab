@@ -171,6 +171,12 @@ class Board(RelativeLayout, GameLogic):
 
     def get_human_input(self, player, board):
         self.columns.disabled = False
+        self.column_choosed = None
+
+        while not self.kill_match and self.column_choosed is None:
+            time.sleep(0.1)
+
+        return self.column_choosed
 
     def _on_column_click(self, btn):
         if self.navegation_episode != self._last_episode:
@@ -181,15 +187,15 @@ class Board(RelativeLayout, GameLogic):
         next = helpers.next_position(self.board, column)
         
         if next is None:
-            self.message_box.show_message('This column is full! Choose another one.', time_sec=5, keep_old_msg=True)
+            self.message_box.show_message('This column is full! Choose another one.',
+                                          time_sec=5,
+                                          keep_old_msg=True)
         else:
-            self._player_turn.column_choosed = column
+            self.column_choosed = column
             self.columns.disabled = True
 
 
     def on_new_turn(self, player, clock):
-        self._player_turn = player
-
         if self._time_limit:
             self.clock.new_turn_starts(clock)
 

@@ -9,10 +9,10 @@ from keras import Sequential
 from keras.layers import Dense, Dropout, Activation
 from .. import RunGame
 from ..agents import AgentRandom
-from ..agents.mcstnn import AgentMCSTNN
+from ..agents.mctsnn import AgentMCTSNN
 
 
-model_key = AgentMCSTNN.model_key
+model_key = AgentMCTSNN.model_key
 kwargs = None
 kill_training = False
 
@@ -151,8 +151,8 @@ def play(episode):
         p_one = AgentRandom
         p_two = AgentRandom
     else:
-        p_one = AgentMCSTNN(model=model)
-        p_two = AgentMCSTNN(model=model)
+        p_one = AgentMCTSNN(model=model)
+        p_two = AgentMCTSNN(model=model)
 
     game = RunGame(p_one, p_two, first_player_randomized=False, start=False)
     thread = Thread(target=kill_game, args=(game,))

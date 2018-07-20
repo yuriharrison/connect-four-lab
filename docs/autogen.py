@@ -19,7 +19,7 @@ sys.path.insert(0, cfl_path)
 from connectFourLab import game
 from connectFourLab.game import RunGame
 from connectFourLab.game import helpers
-from connectFourLab.game.timer import Chronometer, Timer
+from connectFourLab.game.timer import Chronometer, ChronometerDecorator,Timer
 
 from connectFourLab.game.agents import AgentBase, AgentHuman, AgentRandom
 from connectFourLab.game.agents.negamax import AgentNegamax
@@ -55,13 +55,6 @@ EXCLUDE = {}
 # [classA, (classB, [module.classB.method1, module.classB.method2, ...]), ...]
 PAGES = [
     {
-        'page': 'Game/timer.md',
-        'classes': [
-            (Timer, ['start', 'stop']),
-            (Chronometer, ['start','stop', 'reset']),
-        ]
-    },
-    {
         'page': 'Game/game.md',
         'classes': [
             (RunGame, [RunGame.start, 
@@ -72,6 +65,14 @@ PAGES = [
                        RunGame.on_new_turn,
                        RunGame.on_end_turn,
                        ]),
+        ]
+    },
+    {
+        'page': 'Game/timer.md',
+        'classes': [
+            (Timer, ['start', 'stop']),
+            (Chronometer, ['start','stop', 'reset']),
+            ChronometerDecorator,
         ]
     },
     {

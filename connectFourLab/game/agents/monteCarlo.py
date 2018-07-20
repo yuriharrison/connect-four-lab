@@ -157,7 +157,6 @@ class AgentMonteCarlo(AgentBase, TimerStrategy):
         return self.best_position
 
     def start_search(self, board):
-        # TODO: MAKE ZOBRIST TABLE initialize just once
         root_node = self.create_root_node(board)
 
         while not self.time_out:

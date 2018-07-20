@@ -14,7 +14,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 
 from .. import context
-from ..myWidgets import ImagePlus, PopupDecorator, ConfirmationPopup, PolymorphicButton
+from ..myWidgets import ImagePlus, ConfirmationPopupDecorator, ConfirmationPopup, PolymorphicButton
 from ...game import RunGame, helpers
 
 
@@ -405,7 +405,7 @@ class Menu(BoxLayout):
         if self.popup.result == 'continue':
             self.board.rematch()
 
-    @PopupDecorator(ConfigurationPopup)
+    @ConfirmationPopupDecorator(ConfigurationPopup)
     def on_btn_config_release(self):
         self.root.manager.transition.direction = 'right'
         self.root.manager.current = self.root.manager.game_config.name

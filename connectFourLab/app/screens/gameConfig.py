@@ -5,7 +5,6 @@ from kivy.uix.modalview import ModalView
 from ..myWidgets import SelectionBoxItem
 from .. import context
 
-#TODO clock icon
 
 class ModelItem(SelectionBoxItem):
 

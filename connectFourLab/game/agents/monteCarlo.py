@@ -145,6 +145,7 @@ class AgentMonteCarlo(AgentBase, TimerStrategy):
     description = 'Monte carlo search tree strategy'
     kind = 'monte carlo'
     _memory = {}
+    clock_management = True
 
     def action(self, board):
         self.switch_ids(board)

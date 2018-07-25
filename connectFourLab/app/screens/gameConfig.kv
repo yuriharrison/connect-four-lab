@@ -81,11 +81,12 @@
                 valign: 'top'
                 color: color_white_translucent
         
-        RelativeLayout:
+        BoxLayout:
+            padding: 0,0, sp(15),0
             size_hint_x: .2 if agentItem.data.clock_management else 0
 
-            Label:
-                text: 'C'
+            ImagePlus:
+                source_: 'gameConfig/timer_white_icon.png'
 
 
 <TimeLimitItem@SelectionBoxItem>:

@@ -1,5 +1,5 @@
 {
     "name": "MCTSNN - Evaluation",
     "short_description": "Evaluation neural network",
-    "description": "Trainer Description\nData"
+    "description": "This trainer will train a model (new or saved one) using the turn data from a match as the input data and the reward (1 for victory, -1 for defeat and 0 for a draw) as output data.\n\n- Constants -\nepochs: 1\nbatch size: 64\nreport frequency: every 10% (of the quantity of games or the time limit)\n\n\n- Variables -\n\n\nquantity_games: int, quantity of games to be trained on - default 100\n\n\ntime_limit: int, train a set amount of time (quantity_games is ignored) - default None\n\n\nload_model: boolean, if it's to load an existing model - default False\n\n\nmodel_name: string, name of the new/saved model - default 'default'\n\n\n- Example -\n'time_limit=60*30; model_name=old; load_model=True'"
 }

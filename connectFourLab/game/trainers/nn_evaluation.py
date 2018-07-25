@@ -17,13 +17,13 @@ kwargs = None
 kill_training = False
 
 board_size = 49
-quantity_games = 1000
+quantity_games = 100
 time_limit = None
 report_frequency = .1
 
 model = None
-model_name = None
-load_model = None
+model_name = 'default'
+load_model = False
 model_file = None
 weight_file = None
 batch_size = 64

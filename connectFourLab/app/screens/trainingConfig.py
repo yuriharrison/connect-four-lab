@@ -36,7 +36,7 @@ class TrainingConfigScreen(Screen):
     def load_selection_box_trainers(self):
         self.ids.sb_trainers.data = self.convert_dict_to_trainer(context.get_trainers())
         self.ids.sb_trainers.load_items()
-        self.ids.sb_trainers.register_event_selection_changed(self._on_selected_trainer)
+        self.ids.sb_trainers.bind(on_selection_changed=self._on_selected_trainer)
 
     def convert_dict_to_trainer(self, trainers_dict):
         trainers_obj = []
@@ -49,7 +49,7 @@ class TrainingConfigScreen(Screen):
     def on_leave(self):
         self.reset()
 
-    def _on_selected_trainer(self, item):
+    def _on_selected_trainer(self, sb, item):
         self.selected_trainer = item.data
         self.ids.lbl_description.text = item.data.description
 

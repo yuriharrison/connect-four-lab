@@ -1,5 +1,8 @@
 #:kivy 1.9.0
 
+<SelectionBoxItem>:
+    color_normal: color_cyan_dark
+    color_selected: color_orange_dark
 
 <ModelItem>:
     size_hint_y: None
@@ -37,10 +40,6 @@
         ScrollView:
             SelectionBox:
                 id: sb_model
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
-                spacing: sp(5)
                 model: 'ModelItem'
 
         BoxLayout:
@@ -58,15 +57,8 @@
 
 <AgentItem@SelectionBoxItem>:
     id: agentItem
-    size_hint: (1, None)
+    # size_hint: (1, None)
     height: sp(80)
-
-    canvas:
-        Color:
-            rgba: color_cyan_dark if not self.selected else color_orange_dark
-        Rectangle:
-            pos: (0,0)
-            size: self.size
 
     BoxLayout:
         orientation: 'horizontal'
@@ -97,19 +89,8 @@
 
 
 <TimeLimitItem@SelectionBoxItem>:
-    text: self.text
-    size_hint: (None, 1)
-    width: sp(60)
-    
-    canvas.before:
-        Color:
-            rgba: color_cyan_dark if not self.selected else color_orange_dark
-        Rectangle:
-            pos: (0,0)
-            size: self.size
-
     Label:
-        text: self.parent.text
+        text: root.text
 
 
 <SelectedAgentDisplay@ButtonBehavior+RelativeLayout>:
@@ -169,8 +150,9 @@
 
                         SelectedAgentDisplay:
                             id: display_one
-                            on_release: 
-                                root.switch_selection()
+                            on_release: if not self.selected: root.switch_selection()
+                            # on_release: 
+                            #     root.switch_selection()
 
                         Label:
                             text: 'Player Two (black)'
@@ -178,8 +160,7 @@
 
                         SelectedAgentDisplay:
                             id: display_two
-                            on_release: 
-                                root.switch_selection()
+                            on_release: if not self.selected: root.switch_selection()
 
                     BoxLayout:
                         orientation:'vertical'
@@ -200,17 +181,12 @@
                             SelectionBox:
                                 id: sb_time_limit
                                 orientation: 'horizontal'
-                                size_hint_x: None
-                                width: self.minimum_width
                                 spacing: sp(15)
                                 model: 'TimeLimitItem'
 
                 ScrollView:
                     SelectionBox:
                         id: sb_agents
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: self.minimum_height
                         spacing: self.parent.height/20
                         model: 'AgentItem'
                                     

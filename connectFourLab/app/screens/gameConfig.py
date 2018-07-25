@@ -9,10 +9,10 @@ from .. import context
 
 class ModelItem(SelectionBoxItem):
 
-    def __init__(self, data):
+    def __init__(self, data, **kw):
         self.model_name = data[0]
         self.model_file = data[1]
-        super().__init__(data)
+        super().__init__(data=data, **kw)
 
 
 class ModelSelection(ModalView):
@@ -27,9 +27,9 @@ class ModelSelection(ModalView):
     def load_models(self):
         self.sb_model.data = context.get_trained_models(self.model_key)
         self.sb_model.load_items()
-        self.sb_model.register_event_selection_changed(self._on_selected_model)
+        self.sb_model.bind(on_selection_changed=self._on_selected_model)
     
-    def _on_selected_model(self, item):
+    def _on_selected_model(self, sb, item):
         self.selected_model_file = item.model_file
         self.dismiss()
 
@@ -39,10 +39,10 @@ class AgentItem(SelectionBoxItem):
 
 class TimeLimitItem(SelectionBoxItem):
 
-    def __init__(self, data):
+    def __init__(self, data, **kw):
         self.text = data[0]
         self.value = data[1]
-        super().__init__(data)
+        super().__init__(data=data, **kw)
 
 
 class GameConfigScreen(Screen):
@@ -72,12 +72,12 @@ class GameConfigScreen(Screen):
     def load_time_limit_options(self):
         self.ids.sb_time_limit.data = context.get_time_options()
         self.ids.sb_time_limit.load_items()
-        self.ids.sb_time_limit.register_event_selection_changed(self._on_selected_time_limit)
+        self.ids.sb_time_limit.bind(on_selection_changed=self._on_selected_time_limit)
 
     def load_agents_options(self):
         self.ids.sb_agents.data = context.get_agents()
         self.ids.sb_agents.load_items()
-        self.ids.sb_agents.register_event_selection_changed(self._on_selected_agent)
+        self.ids.sb_agents.bind(on_selection_changed=self._on_selected_agent)
     
     def on_enter(self):
         self._set_default()
@@ -96,10 +96,10 @@ class GameConfigScreen(Screen):
         self.ids.sb_time_limit.reset()
 
 
-    def _on_selected_time_limit(self, item):
+    def _on_selected_time_limit(self, sb, item):
         self.time_limit = item.value
 
-    def _on_selected_agent(self, item, model_set=False):
+    def _on_selected_agent(self, sb, item, model_set=False):
         if not model_set:
             if self._need_model(item):
                 return
@@ -120,7 +120,7 @@ class GameConfigScreen(Screen):
 
         if model_file:
             self.selected_models[self.selecting] = model_file
-            self._on_selected_agent(modal.item, model_set=True)
+            self._on_selected_agent(None, modal.item, model_set=True)
         else:
             self.ids.sb_agents.select(self.selected_agent_items[self.selecting], 
                                       silent=True)

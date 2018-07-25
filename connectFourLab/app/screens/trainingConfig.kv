@@ -2,15 +2,7 @@
 
 
 <TrainerItem>:
-    size_hint: (1, None)
     height: sp(80)
-
-    canvas:
-        Color:
-            rgba: color_cyan_dark if not self.selected else color_orange_dark
-        Rectangle:
-            pos: (0,0)
-            size: self.size
 
     BoxLayout:
         orientation: 'vertical'
@@ -101,10 +93,7 @@
                 ScrollView:
                     SelectionBox:
                         id: sb_trainers
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: self.minimum_height
-                        spacing: self.parent.height/20
+                        spacing: sp(10)
                         model: 'TrainerItem'
                                     
             # foot

@@ -34,8 +34,10 @@
                         pos: self.pos
                 Label:
                     id: log_console
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text_size: self.width, None
                     font_size: '16sp'
-                    text_size: self.size
                     halign: 'left'
                     valign: 'top'
                     padding: ('10sp','10sp')

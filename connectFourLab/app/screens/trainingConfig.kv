@@ -55,22 +55,18 @@
                             Label:
                                 text: 'Description'
                                 font_size: '25sp'
-
-                        Label:
-                            canvas.before:
-                                Color:
-                                    rgba: color_white_translucent
-                                Rectangle:
-                                    size: self.size
-                                    pos: self.pos
-
-                            id: lbl_description
-                            font_size: '18sp'
-                            text_size: self.size
-                            color: color_cyan_dark
-                            halign: 'left'
-                            valign: 'top'
-                            padding: ('5sp','5sp')
+                                
+                        ScrollView:
+                            Label:
+                                id: lbl_description
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                text_size: self.width, None
+                                font_size: '16sp'
+                                color: color_cyan_dark
+                                halign: 'left'
+                                valign: 'top'
+                                padding: ('5sp','5sp')
                     
                     BoxLayout:
                         orientation: 'vertical'

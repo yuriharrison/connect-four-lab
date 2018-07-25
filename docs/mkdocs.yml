@@ -14,3 +14,6 @@ pages:
   - Trainers: Agents/trainers.md
   - List of Agents: Agents/agents.md
   - List of Strategies: Agents/strategies.md
+- Custom Widgets: 
+  - Selection Box: CustomWidgets/selectionBox.md
+  - Confirmation Pop-up: CustomWidgets/confirmationPopUp.md

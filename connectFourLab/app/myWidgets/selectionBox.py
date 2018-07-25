@@ -6,6 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang.builder import Builder
 
 # TODO: implement the ScrollView inside the SelectionBox widget
+# TODO: implement `clean` method, remove all itens and reset the box
 
 Builder.load_string('''
 <SelectionBox>:
@@ -78,7 +79,7 @@ class SelectionBox(BoxLayout):
         previous_item: `SelectionBoxItem` widget, previous selected item
         selected_index: int, index of the last item selected
         previous_index: int, index of the previous item selected
-    
+
     # Events
         on_selection_changed: called every time a item is selected or
             unselected
@@ -86,9 +87,9 @@ class SelectionBox(BoxLayout):
             - args: item
                 - item - `SelectionBoxItem` widget selected
     
-    #### Example
+    ### Examples
 
-    # Python file
+    **Python file**
 
     ```python
     from kivy.uix.relativelayout import RelativeLayout
@@ -124,7 +125,7 @@ class SelectionBox(BoxLayout):
         MainApp().run()
     ```
 
-    # Kivy file
+    **Kivy file**
 
     ```kivy
     #:kivy 1.0.0
@@ -160,9 +161,9 @@ class SelectionBox(BoxLayout):
                     # spacing: sp(15)
     ```
 
-    # Custom item `SelectionBoxItem` widget
+    **Custom item `SelectionBoxItem` widget**
 
-    ```
+    ```kivy
     <CustomItem@SelectionBoxItem>:
         # customization...
 
@@ -212,6 +213,7 @@ class SelectionBox(BoxLayout):
             silent: bool, optional, default False -
                 select the item quietly, without dispatch the 
                 `on_selection_changed` event
+
         # Exception
             ValueError: raise when the `value`:
                 - index - index out of range

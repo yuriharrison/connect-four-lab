@@ -69,7 +69,8 @@ class ConfirmationPopup(Popup):
 
     ### Example
 
-    # Kivy file
+    **Kivy file**
+
     ```kivy
     #:kivy 1.0.7
     <ConfirmationPopup>:
@@ -83,7 +84,8 @@ class ConfirmationPopup(Popup):
             on_press: root.on_button_press()
     ```
 
-    # Python file
+    **Python file**
+
     ```python
     from kivy.app import App
     from kivy.uix.relativelayout import RelativeLayout
@@ -130,7 +132,7 @@ class ConfirmationPopupDecorator:
 
     #### Simple aplication
     
-    # Kivy file
+    **Kivy file**
 
     ```kivy
     <ConfirmationPopup>:
@@ -144,7 +146,7 @@ class ConfirmationPopupDecorator:
             on_press: root.on_button_press('Closing the app...')
     ```
 
-    # Python file
+    **Python file**
     ```python
     class MainScreen(RelativeLayout):
         
@@ -157,9 +159,9 @@ class ConfirmationPopupDecorator:
             App.get_running_app().stop()
     ```
 
-    ##### Customizing
+    #### Customizing
 
-    # Simple customization
+    **Simple customization**
 
     ```python
     class MainScreen(RelativeLayout):
@@ -169,7 +171,7 @@ class ConfirmationPopupDecorator:
             App.get_running_app().stop()
     ```
 
-    # More customization
+    **More customization**
 
     ```python
     class MainScreen(RelativeLayout):
@@ -184,7 +186,7 @@ class ConfirmationPopupDecorator:
             # ...
     ```
 
-    # Using a custom popup class
+    **Using a custom popup class**
 
     ```python
     class MyCustomPopup(ConfirmationPopup):
@@ -197,7 +199,7 @@ class ConfirmationPopupDecorator:
             # ...
     ```
 
-    # Using a custom popup class and new kwargs
+    **Using a custom popup class and new kwargs**
 
     ```python
     class MyCustomPopup(ConfirmationPopup):

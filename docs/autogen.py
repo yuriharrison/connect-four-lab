@@ -35,6 +35,8 @@ from connectFourLab.game.agents.strategies import SimulationStrategy
 from connectFourLab.game.agents.strategies import Node
 from connectFourLab.game.agents.strategies import DepthMeasure
 
+from connectFourLab.app.myWidgets import ConfirmationPopup, ConfirmationPopupDecorator
+from connectFourLab.app.myWidgets import SelectionBox, SelectionBoxItem
 
 if sys.version[0] == '2':
     reload(sys)
@@ -124,6 +126,23 @@ PAGES = [
                                     DepthMeasure.reset,
                                     DepthMeasure.print,
                     ]),
+        ]
+    },
+    {
+        'page': 'CustomWidgets/selectionBox.md',
+        'classes': [
+            (SelectionBox, [SelectionBox.load_items, 
+                            SelectionBox.select, 
+                            SelectionBox.reset,
+            ]),
+            SelectionBoxItem,
+        ]
+    },
+    {
+        'page': 'CustomWidgets/confirmationPopUp.md',
+        'classes': [
+            ConfirmationPopup,
+            ConfirmationPopupDecorator,
         ]
     },
 ]

@@ -10,7 +10,7 @@ The game engine runs a 7x7 board which is a more competitive version than the cl
 
 ### Getting Started
 
-To see a guide on where to start go to [Getting Started](./gettingStarted)
+To see a guide on where to start go to [Getting Started](https://yuriharrison.github.io/connect-four-lab/gettingStarted/)
 
 ### Documentation
 

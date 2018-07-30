@@ -41,10 +41,10 @@ In Connect Four Lab each AI algorithm is called Agent.
 
 __List of available agents:__
 
-- Negamax - [about](./Agents/agents/#AgentNegamax)
-- Simulation - [about](./Agents/agents/#AgentSimulation)
-- Monte Carlo Tree Search - [about](./Agents/agents/#AgentMonteCarlo)
-- Monte Carlo Tree Search with Neural Network - [about](./Agents/agents/#AgentMCTSNN)
+- Negamax - [about](https://yuriharrison.github.io/connect-four-lab/Agents/agents/#agentnegamax)
+- Simulation - [about](https://yuriharrison.github.io/connect-four-lab/Agents/agents/#agentsimulation)
+- Monte Carlo Tree Search - [about](https://yuriharrison.github.io/connect-four-lab/Agents/agents/#agentmontecarlo)
+- Monte Carlo Tree Search with Neural Network - [about](https://yuriharrison.github.io/connect-four-lab/Agents/agents/#agentmctsnn)
 
 
 ### Related projects

@@ -1,10 +1,15 @@
 site_name: Connect Four Lab Documentation
-# theme: default
+theme: 'material'
 # theme_dir: theme
 docs_dir: sources
 
+markdown_extensions:
+  - codehilite
+  
 pages:
 - Home: index.md
+- Getting Started: gettingStarted.md
+- LICENSE: license.md
 - Game:
   - Game: Game/game.md
   - Timer: Game/timer.md
@@ -14,6 +19,7 @@ pages:
   - Trainers: Agents/trainers.md
   - List of Agents: Agents/agents.md
   - List of Strategies: Agents/strategies.md
-- Custom Widgets: 
+- Custom Widgets:
   - Selection Box: CustomWidgets/selectionBox.md
   - Confirmation Pop-up: CustomWidgets/confirmationPopUp.md
+  

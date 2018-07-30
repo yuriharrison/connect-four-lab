@@ -52,7 +52,7 @@ class AgentBase:
             required method(s)
 
     ### Clock management
-        If the game is time limeted the `update_clock` will be
+        If the game is time limited the `update_clock` will be
         called every turn and you will be able to manage the
         `Timer` (see [Timer](../Game/timer)) in `self.clock`.
 
@@ -60,6 +60,7 @@ class AgentBase:
         To use neural network you need a [Trainer](./trainers)
         which have to create and train a model for the agent.
         
+        The trained models are stored in the `game/models/` folder.
     # Example
         MCTSNN: Monte Carlo Tree Search with Neural Network implementation -
             see [documentation](./agents#MCTSNN)

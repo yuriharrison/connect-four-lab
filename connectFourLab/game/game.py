@@ -81,7 +81,7 @@ class RunGame:
     RunGame(print_result_on_console=True)
     ```
 
-    __Example 1__
+    __Example 2__
 
     ```python
     import time

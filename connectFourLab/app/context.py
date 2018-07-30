@@ -85,7 +85,7 @@ def load_agents():
     
     __AGENTS__ = agents
 
-def load_trainer_package(module):
+def load_trainer_module(module):
     absolute_module = _trainer_package + '.' + module
     module = import_module(absolute_module)
     return module

@@ -51,7 +51,7 @@ __List of available agents:__
 
 This project use other authorial projects:
 
-- Timer - Powerful python timer with useful functions (Decorator, callback, contextmanager) and easy to use. [see on Github](https://github.com/yuriharrison/timer)
+- Timer - Powerful python timer with useful functions (Decorator, callback, contextmanager) and easy to use - [see on Github](https://github.com/yuriharrison/timer)
 - Custom Widgets for Kivy - [see on Github](https://github.com/yuriharrison/custom-widgets)
 
 

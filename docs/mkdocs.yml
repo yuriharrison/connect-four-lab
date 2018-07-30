@@ -2,6 +2,7 @@ site_name: Connect Four Lab Documentation
 theme: 'material'
 # theme_dir: theme
 docs_dir: sources
+google_analytics: ['UA-123096277-1', 'https://yuriharrison.github.io/connect-four-lab/']
 
 markdown_extensions:
   - codehilite

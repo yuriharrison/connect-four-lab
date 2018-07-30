@@ -1,0 +1,8 @@
+numpy==1.14.2
+Keras==2.2.0
+kivy.deps.sdl2==0.1.17
+kivy==1.10.1
+
+# TensorFlow
+# tensorflow==1.9.0
+# tensorflow_gpu==1.7.0

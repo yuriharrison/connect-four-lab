@@ -5,8 +5,12 @@ The documentation is in this directory under sources/ folder (automatically gene
 ## Building the documentation
 ------
 
-- install MkDocs
+- install [MkDocs](http://mkdocs.org)
     - `pip install mkdocs`
+- install [MkDocs Material](https://squidfunk.github.io/mkdocs-material/)
+    - `pip install mkdocs-material`
+- install [CodeHilite](https://python-markdown.github.io/extensions/code_hilite/)
+    - `pip install pygments`
 - `cd` to the docs/ folder and run:
     - `python autogen.py`
 

@@ -9,6 +9,14 @@ The game engine runs a 7x7 board which is a more competitive version than the cl
 
 To see a guide on where to start go to [Getting Started](./gettingStarted)
 
+### Documentation
+
+Read on [yuriharrison.github.io/connect-four-lab](https://yuriharrison.github.io/connect-four-lab/)
+
+__Details__
+
+The documentation of this project uses extended Markdown. The website was create using [Mkdocs](https://www.mkdocs.org/) and [Mkdocs Material](https://github.com/squidfunk/mkdocs-material).
+
 ### Requirements
 
 - numpy

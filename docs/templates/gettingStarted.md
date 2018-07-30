@@ -12,13 +12,15 @@ To run a game you need to choose the Agents which will play the game and import 
 
 ## APP
 
+To start the App execute the file 'run_app.py' on the root directory.
+
 ### Running a game
 
 Click in "Play" on the Main Menu
 
 __[Image 1]__
 
-![main_menu](../img/gs_img1.png)
+![main_menu](./img/gs_img1.png)
 
 Select the Agents that you want playing.
 Agents who requires neural network models, you'll have to choose which trained model they're gonna use (see image 3 bellow).
@@ -30,11 +32,11 @@ The Timer Icon (see image 2 bellow) determine if the Agent are able to manage ti
 
 __[Image 2]__
 
-![main_menu](../img/gs_img2.png)
+![main_menu](./img/gs_img2.png)
 
 __[Image 3]__
 
-![main_menu](../img/gs_img3.png)
+![main_menu](./img/gs_img3.png)
 
 Some matches can finish immediately others can take minutes, depends on the match configuration.
 
@@ -46,7 +48,7 @@ See the message box on the bottom right of the screen to know what's happening.
 
 __[Image 4]__
 
-![main_menu](../img/gs_img4.png)
+![main_menu](./img/gs_img4.png)
 
 
 ### Training a new model
@@ -55,25 +57,25 @@ Click on "Training" on the main menu.
 
 __[Image 5]__
 
-![main_menu](../img/gs_img5.png)
+![main_menu](./img/gs_img5.png)
 
 Select which trainer you want to execute. Read the description and set the variables if necessary. Click in "Start Training".
 
 __[Image 6]__
 
-![main_menu](../img/gs_img6.png)
+![main_menu](./img/gs_img6.png)
 
 While running the trainer the console screen will show log messages from the trainer. You can stop the training by clicking on the "Cancel" button, the trainer will receive a command to stop.
 
 __[Image 7]__
 
-![main_menu](../img/gs_img7.png)
+![main_menu](./img/gs_img7.png)
 
 After finish you can click on "Play" to be directed to the Game Configuration Screen.
 
 __[Image 8]__
 
-![main_menu](../img/gs_img7.png)
+![main_menu](./img/gs_img7.png)
 
 
 ## Creating a new Agent

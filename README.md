@@ -31,6 +31,11 @@ The documentation of this project uses extended Markdown. The website was create
     - [Documentation](https://kivy.org/docs/)
     - [Github](https://github.com/kivy/kivy)
 
+### Testing
+
+- Install pytest: `pip install pytest`
+- Execute the file: `tests/test_all.bat`
+
 ### Structure
 
 The project is divided in two main packages 'game' and 'app'. The game package contains all the necessary modules to run a game (game engine, agents, models, helpers, etc). The app package is an user interface made in Kivy, in it you can run games see all turns being played, play yourself agains an Agent or train a new model.

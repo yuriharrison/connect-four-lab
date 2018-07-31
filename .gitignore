@@ -5,6 +5,7 @@ ui_design/
 docs/site/
 docs/sources/
 docs/theme/
+tests/.pytest_cache
 
 # developer enviroments
 .vscode/

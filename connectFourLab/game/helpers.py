@@ -14,7 +14,7 @@ def check_winner(game_board):
     # Return
         1: id 1 is the winner
         -1: id -1 is the winner
-        None: no winner in the giver table
+        None: no winner in the given table
 
     # Example
 
@@ -87,11 +87,17 @@ def next_position(board, column):
     
     # Arguments
         board: matrix, required
-        column: int, required - Index of the column
+        column: int (0 to 6) - required - Index of the column
 
     # Return
         Index (row) of availabe position
+
+    # Exception
+        IndexError: `column` argument out of range.
     """
+    if column < 0 or column > 6:
+        raise IndexError('Column out of range.')
+
     for i, value in enumerate(board[column]):
         if value == 0:
             return i

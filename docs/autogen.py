@@ -12,9 +12,7 @@ import inspect
 import os, sys
 import shutil
 
-current_directory = os.path.dirname(__file__)
-cfl_path = os.path.join(current_directory, '../')
-sys.path.insert(0, cfl_path)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
 
 from connectFourLab import game
 from connectFourLab.game import RunGame

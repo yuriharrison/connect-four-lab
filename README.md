@@ -2,7 +2,7 @@
 
 <img align="right" height="256" src="https://raw.githubusercontent.com/yuriharrison/connect-four-lab/master/connectFourLab/app/images/home/logo.png"/>
 
-Connect Four Lab is a platform to test AI algorithms in the connect four game.
+Connect Four Lab is a platform to test Machine Learning algorithms in the connect four game.
 
 ##### The game
 

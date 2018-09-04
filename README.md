@@ -22,14 +22,16 @@ The documentation of this project uses extended Markdown. The website was create
 
 ### Requirements
 
+You can use `pip install -r requirements.txt`
+
 - numpy
 - Keras - Only to use Agents who requires neural network models
     - [Website & Documentation](https://keras.io/)
-    - [Github](https://github.com/keras-team/keras)
+    - [GitHub](https://github.com/keras-team/keras)
 - Kivy - Only to use the app
     - [Website](https://kivy.org/)
     - [Documentation](https://kivy.org/docs/)
-    - [Github](https://github.com/kivy/kivy)
+    - [GitHub](https://github.com/kivy/kivy)
 
 ### Testing
 
